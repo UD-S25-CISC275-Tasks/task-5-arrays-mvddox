@@ -33,7 +33,11 @@ export function tripleNumbers(numbers: number[]): number[] {
  * the number cannot be parsed as an integer, convert it to 0 instead.
  */
 export function stringsToIntegers(numbers: string[]): number[] {
-    return [];
+    let convertedNums: number[] = numbers.map((str: string): number => +str);
+    convertedNums = convertedNums.map((num: number): number =>
+        isNaN(num) ? 0 : num,
+    );
+    return convertedNums;
 }
 
 /**
@@ -44,7 +48,14 @@ export function stringsToIntegers(numbers: string[]): number[] {
  */
 // Remember, you can write functions as lambdas too! They work exactly the same.
 export const removeDollars = (amounts: string[]): number[] => {
-    return [];
+    let convertedDollars: string[] = amounts.map((str: string): string =>
+        str[0] === "$" ? str.slice(1) : str,
+    );
+    let convertedNumbers = convertedDollars.map((str: string): number => +str);
+    convertedNumbers = convertedNumbers.map((num: number): number =>
+        isNaN(num) ? 0 : num,
+    );
+    return convertedNumbers;
 };
 
 /**
@@ -128,5 +139,26 @@ export function makeMath(addends: number[]): string {
  * And the array [1, 9, 7] would become [1, 9, 7, 17]
  */
 export function injectPositive(values: number[]): number[] {
-    return [];
+    //let negFound: boolean = false;
+    //let reducedVal: number = values.reduce((currentTotal: number, num: number) => num < 0 || negFound ? currentTotal:currentTotal+num, 0);
+
+    let negIndex: number = values.findIndex((num: number): boolean => num < 0);
+    if (negIndex === -1) {
+        let reducedVal: number = values.reduce(
+            (currentTotal: number, num: number) => currentTotal + num,
+            0,
+        );
+        let newArr: number[] = [...values, reducedVal];
+        return newArr;
+    }
+    let slicedVals: number[] = values.slice(0, negIndex + 1);
+    let reducedVal: number = slicedVals.reduce(
+        (currentTotal: number, num: number) =>
+            num < 0 ? currentTotal : currentTotal + num,
+        0,
+    );
+    slicedVals = [...slicedVals, reducedVal];
+    let otherVals: number[] = values.slice(negIndex + 1, values.length);
+    slicedVals = [...slicedVals, ...otherVals];
+    return slicedVals;
 }
